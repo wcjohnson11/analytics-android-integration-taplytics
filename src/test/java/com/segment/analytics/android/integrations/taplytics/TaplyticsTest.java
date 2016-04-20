@@ -105,10 +105,22 @@ public class TaplyticsTest {
 
     @Test public void trackWithValue() {
       integration.track(new TrackPayloadBuilder().event("foo")
-          .properties(new Properties().putValue(20.0))
+          .properties(new Properties()
+              .putValue(20.0))
           .build());
 
       verify(taplytics).logEvent(eq("foo"), eq(20.0), jsonEq(new JSONObject()));
+    }
+
+    @Test public void trackWithRevenue() {
+      integration.track(new TrackPayloadBuilder().event("foo")
+          .properties(new Properties()
+              .putValue(20.0)
+              .putRevenue(1000))
+          .build());
+
+      verify(taplytics).logEvent(eq("foo"), eq(20.0), jsonEq(new JSONObject()));
+      verify(taplytics).logRevenue(eq("foo"), eq(1000), jsonEq(new JSONObject()));
     }
 
   private void verifyNoMoreTaplyticsInteractions() {
